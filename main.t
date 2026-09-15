@@ -330,7 +330,7 @@ loop
     var prediction : int := predict
     
     Draw.Text ("actual number: " + intstr(round(mnistArray(currentImage, 0))), 
-	       maxx div 2 - 100, maxy - 50, fontID, 255)
+	       maxx div 2 - 100, maxy - 50, fontID, black)
     if round(mnistArray(currentImage, 0)) = prediction then 
 	Draw.Text ("predicted number: " + intstr(prediction),
 		   maxx div 2 - 100, maxy - 70, fontID, green)
@@ -339,7 +339,7 @@ loop
 		   maxx div 2 - 100, maxy - 70, fontID, red)
     end if
     Draw.Text ("current image: " + intstr(currentImage + 1) + "/" + intstr(imageCount), 
-	       maxx div 2 - 100, maxy - 90, fontID, 255)
+	       maxx div 2 - 100, maxy - 90, fontID, black)
     View.Update
     currentChar := getchar
     if ord(currentChar) = 203 and currentImage > 0 then
