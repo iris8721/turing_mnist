@@ -3,6 +3,7 @@ setscreen ("graphics:max;max,nobuttonbar,nocursor,offscreenonly")
 var fontID : int
 fontID := Font.New ("serif:12")
 assert fontID > 0
+Rand.Seed (Time.Sec)
 
 const INPUT_NODES : int := 784
 const HIDDEN_NODES : int := 128
@@ -10,6 +11,7 @@ const OUTPUT_NODES : int := 10
 const INITIAL_LEARNING_RATE : real := 0.1
 var LEARNING_RATE : real := INITIAL_LEARNING_RATE
 const EPOCHS : int := 10
+const IMAGE_LIMIT : int := 1000
 const MODEL_FILE : string := "mnist_model.dat"
 
 var trainingSet : int
@@ -19,7 +21,7 @@ var currentChar : string (1)
 var colourCode : int
 var imageCount : int
 var currentImage : int
-var mnistArray : array 0 .. 59999, 0 .. 784 of real
+var mnistArray : array 0 .. IMAGE_LIMIT - 1, 0 .. 784 of real
 
 var inputLayer : array 1 .. INPUT_NODES of real
 var hiddenLayer : array 1 .. HIDDEN_NODES of real
@@ -47,7 +49,7 @@ procedure initializeWeights
 end initializeWeights
 
 function sigmoid (x : real) : real
-    result 1 / (1 + exp(-x))
+    result 1 / (1 + exp (-max (x, -700.0)))
 end sigmoid
 
 function sigmoidDerivative (x : real) : real
@@ -55,9 +57,6 @@ function sigmoidDerivative (x : real) : real
 end sigmoidDerivative
 
 procedure loadData
-    var fontID : int := Font.New ("serif:12")
-    assert fontID > 0
-
     colourCode := RGB.AddColour (0, 0, 0)
     imageCount := 0
 
@@ -68,13 +67,11 @@ procedure loadData
 	quit
     end if
 
-    var imageLimit : int := 1000
-
     loop
 	cls
 	put "processing images... " + intstr(imageCount)
 	View.Update
-	exit when eof (trainingSet) or imageCount = imageLimit
+	exit when eof (trainingSet) or imageCount = IMAGE_LIMIT
 	get : trainingSet, currentChar : 1 % label
 	mnistArray(imageCount, 0) := strint (currentChar)
 	get : trainingSet, currentChar : 1 % first comma
@@ -357,9 +354,9 @@ loop
 	       maxx div 2 - 100, maxy - 90, fontID, black)
     View.Update
     currentChar := getchar
-    if ord(currentChar) = 203 and currentImage > 0 then
+    if ord(currentChar) = 203 and currentImage > 0 then % left arrow
 	currentImage -= 1
-    elsif ord(currentChar) = 205 and currentImage < imageCount - 1 then
+    elsif ord(currentChar) = 205 and currentImage < imageCount - 1 then % right arrow
 	currentImage += 1
     end if
     cls
