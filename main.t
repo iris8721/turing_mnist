@@ -81,11 +81,18 @@ procedure loadData
 	for i : 1 .. 784
 	    currentByte := ""
 	    loop
+		exit when eof (trainingSet)
 		get : trainingSet, currentChar : 1
 		exit when currentChar = "," or currentChar = "\n"
-		currentByte := currentByte + currentChar
+		if currentChar not= "\r" then
+		    currentByte := currentByte + currentChar
+		end if
 	    end loop
-	    mnistArray (imageCount, i) := strint (currentByte) / 255.0
+	    if length (currentByte) > 0 then
+		mnistArray (imageCount, i) := strint (currentByte) / 255.0
+	    else
+		mnistArray (imageCount, i) := 0
+	    end if
 	end for
 	imageCount += 1
     end loop
