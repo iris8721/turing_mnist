@@ -62,6 +62,11 @@ procedure loadData
     imageCount := 0
 
     open : trainingSet, "mnist_train.csv", get
+    if trainingSet <= 0 then
+	put "could not open mnist_train.csv"
+	View.Update
+	quit
+    end if
 
     var imageLimit : int := 1000
 
@@ -95,6 +100,10 @@ end decayLearningRate
 procedure saveModel
     var modelFile : int
     open : modelFile, MODEL_FILE, put
+    if modelFile <= 0 then
+	put "could not open ", MODEL_FILE, " for writing"
+	return
+    end if
 
     for i : 1 .. INPUT_NODES
 	for j : 1 .. HIDDEN_NODES
@@ -268,7 +277,6 @@ end predict
 function loadModel : boolean
     var modelFile : int
     open : modelFile, MODEL_FILE, get
-    put modelFile
     if not modelFile > 0 then
 	result false
     end if
