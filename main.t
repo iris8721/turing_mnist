@@ -3,7 +3,7 @@ setscreen ("graphics:max;max,nobuttonbar,nocursor,offscreenonly")
 var fontID : int
 fontID := Font.New ("serif:12")
 assert fontID > 0
-Rand.Seed (Time.Sec)
+Rand.Set (Time.Sec)
 
 const INPUT_NODES : int := 784
 const HIDDEN_NODES : int := 128
